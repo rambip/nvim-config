@@ -67,7 +67,7 @@ local on_attach = function(_, bufnr)
 
   map("n", ",wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, opts "List workspace folders")
+  end)
 
   -- map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
   -- map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
@@ -102,12 +102,37 @@ map("n", "<space>e", file_navigation.openExplorer)
 map('n', '<space>u', file_navigation.openCurrentDir)
 map('n', '<space>d', file_navigation.cdToCurrent)
 
-file_navigation.setup_navigation(
+local setup_navigation = function(opts)
+    -- Move to window using the <ctrl> hjkl keys
+    map("n", opts.left, "<C-w>h", { remap = true })
+    map("n", opts.down, "<C-w>j", { remap = true })
+    map("n", opts.up, "<C-w>k", { remap = true })
+    map("n", opts.right, "<C-w>l", { remap = true })
+
+    -- Move to window using the <ctrl> hjkl keys
+    map("t", opts.left, "<c-\\><c-n><C-w>h", { remap = true })
+    map("t", opts.down, "<c-\\><c-n><C-w>j", {  remap = true })
+    map("t", opts.up, "<c-\\><c-n><C-w>k", {  remap = true })
+    map("t", opts.right, "<c-\\><c-n><C-w>l", {  remap = true })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'netrw',
+        callback = function()
+            -- Create buffer-local keymaps
+            map("n", opts.left, "<C-w>h", {  remap = true, buffer = true })
+            map("n", opts.down, "<C-w>j", {  remap = true, buffer = true })
+            map("n", opts.up, "<C-w>k", {  remap = true, buffer = true })
+            map("n", opts.right, "<C-w>l", {  remap = true, buffer = true })
+        end,
+    })
+end
+
+setup_navigation(
 {
-    left = "<C-h",
-    right = "C-l",
-    up = "C-k",
-    down = "C-j",
+    left = "<C-h>",
+    right = "<C-l>",
+    up = "<C-k>",
+    down = "<C-j>",
 })
 
 
@@ -125,6 +150,9 @@ end, {expr = true, silent = true})
 vim.keymap.set('v', 's', function() send_to_term.send(vim.fn.visualmode()) end, {silent = true})
 vim.keymap.set('n', 'S', 's$', {silent = true})
 
+
+-- plugins: git
+require("mini.git").setup()
 
 -- plugins: code assistant
 add({
