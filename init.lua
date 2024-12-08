@@ -174,4 +174,4 @@ require('avante').setup()
 -- plugins: other
 
 add("NStefan002/speedtyper.nvim")
-require("speedtyper").setup({})
+require("speedtyper")
