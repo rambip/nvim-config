@@ -164,7 +164,7 @@ add({
     'MunifTanjim/nui.nvim',
     'echasnovski/mini.icons'
   },
-  hooks = { post_checkout = function() vim.cmd('make') end }
+  hooks = { post_checkout = function() vim.cmd('AvanteBuild') end }
 })
 
 require('avante_lib').load()
