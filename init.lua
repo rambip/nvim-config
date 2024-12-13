@@ -9,6 +9,10 @@ opt.shiftwidth = 4
 opt.sts = 4
 
 local map = vim.keymap.set
+map({"n", "v"}, "<SPACE>", "<Nop>")
+
+vim.g.mapleader = ' '
+
 
 map("n", '<space>p', '"+p')
 map("n", '<space>y', '"+y')
@@ -143,12 +147,14 @@ local send_to_term = require("send_to_term")
 
 vim.keymap.set('n', 'ss', function() send_to_term.send('direct', vim.fn.getline('.')) end, {silent = true})
 vim.keymap.set('n', 's<Enter>', function() send_to_term.send('direct', "") end)
+vim.keymap.set('n', 'sc', send_to_term.clear_terminal)
 vim.keymap.set('n', 's', function()
     vim.o.operatorfunc = 'v:lua.send_to_term'
     return 'g@'
 end, {expr = true, silent = true})
 vim.keymap.set('v', 's', function() send_to_term.send(vim.fn.visualmode()) end, {silent = true})
 vim.keymap.set('n', 'S', 's$', {silent = true})
+
 
 
 -- plugins: git
@@ -174,4 +180,4 @@ require('avante').setup()
 -- plugins: other
 
 add("NStefan002/speedtyper.nvim")
-require("speedtyper")
+require("speedtyper").setup({})

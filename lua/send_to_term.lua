@@ -50,7 +50,7 @@ function M.send_lines_to_term(lines)
     local line
 
     if #lines > 1 then
-        line = send_target.begin_pos .. table.concat(lines, send_target.newline) .. send_target.end_pos
+        line = send_target.begin_pos .. table.concat(lines, send_target.newline) .. send_target.end_pos .. "\n"
     else
         line = lines[1] .. nl
     end
@@ -96,6 +96,17 @@ end
 
 _G.send_to_term = M.send
 
+-- Function to clear the terminal using Ctrl-L
+function M.clear_terminal()
+    if not vim.g.send_target then
+        vim.notify('Target terminal not set. Run :SendHere or :SendTo first.', vim.log.levels.WARN)
+        return
+    end
+    
+    -- Send Ctrl-L (ASCII form \x0C) to clear screen
+    vim.fn.jobsend(vim.g.send_target.term_id, "\x0C")
+end
+
 -- Create user commands
 vim.api.nvim_create_user_command('SendHere', function(opts)
     M.send_here(opts.args ~= '' and opts.args or nil)
@@ -104,5 +115,9 @@ end, {
     complete = function() return M.send_opts() end
 })
 
+-- Create command to clear terminal
+vim.api.nvim_create_user_command('SendClear', function()
+    M.clear_terminal()
+end, {})
 
 return M
