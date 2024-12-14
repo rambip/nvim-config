@@ -7,6 +7,7 @@ opt.expandtab = true
 opt.smarttab = true
 opt.shiftwidth = 4
 opt.sts = 4
+opt.splitright = true
 
 local map = vim.keymap.set
 map({"n", "v"}, "<SPACE>", "<Nop>")
