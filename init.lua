@@ -96,7 +96,12 @@ require("mini.surround").setup({
     },
 })
 require("mini.bracketed").setup()
-require("mini.ai").setup()
+
+require("mini.ai").setup({
+    -- custom_textobjects = {
+    --     ['%'] = "()%()()%()",
+    -- }
+})
 
 -- plugins: navigating files
 local file_navigation = require("file_navigation")
@@ -155,6 +160,29 @@ end, {expr = true, silent = true})
 vim.keymap.set('v', 's', function() send_to_term.send(vim.fn.visualmode()) end, {silent = true})
 vim.keymap.set('n', 'S', 's$', {silent = true})
 
+local filetype_commands = {
+    python = "source .venv/bin/activate; ipython --no-autoindent || python",
+}
+
+
+vim.api.nvim_create_user_command('Repl', function()
+    local original_win = vim.api.nvim_get_current_win()
+    -- Get the current buffer's filetype
+    local filetype = vim.bo.filetype
+
+    -- Check if there's a command for this filetype
+    if filetype_commands[filetype] then
+        local command = filetype_commands[filetype]
+
+        -- Open a terminal and run the command
+        vim.cmd('vert terminal ' .. command)  -- Split the window horizontally
+        vim.cmd('SendHere')  -- Start in insert mode in the terminal
+    else
+        vim.notify("No run command configured for filetype: " .. filetype, vim.log.levels.WARN)
+    end
+    -- jump back to previous window 
+    vim.api.nvim_set_current_win(original_win)
+end, {})
 
 
 -- plugins: git

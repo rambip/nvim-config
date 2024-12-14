@@ -44,9 +44,22 @@ function M.send_opts(_, _, _)
     return vim.tbl_keys(vim.g.send_multiline)
 end
 
+
+local function remove_whitespace_lines(lines)
+    local result = {}
+    for _, line in ipairs(lines) do
+        -- Use pattern matching to check if line contains only whitespace
+        if not line:match("^%s*$") then
+            table.insert(result, line)
+        end
+    end
+    return result
+end
+
 -- Core function to send lines to terminal
 function M.send_lines_to_term(lines)
     local send_target = vim.g.send_target
+    lines = remove_whitespace_lines(lines)
     local line
 
     if #lines > 1 then
