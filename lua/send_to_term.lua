@@ -62,6 +62,7 @@ function M.send_lines_to_term(lines)
     lines = remove_whitespace_lines(lines)
     local line
 
+
     if #lines > 1 then
         line = send_target.begin_pos .. table.concat(lines, send_target.newline) .. send_target.end_pos .. "\n"
     else

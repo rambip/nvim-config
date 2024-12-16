@@ -162,7 +162,7 @@ vim.keymap.set('v', 's', function() send_to_term.send(vim.fn.visualmode()) end, 
 vim.keymap.set('n', 'S', 's$', {silent = true})
 
 local filetype_commands = {
-    python = "source .venv/bin/activate; ipython --no-autoindent || python",
+    python = "source .venv/bin/activate; source ./bin/acivate; ipython --no-autoindent || python",
 }
 
 
@@ -199,7 +199,21 @@ add({
     'MunifTanjim/nui.nvim',
     'echasnovski/mini.icons'
   },
-  hooks = { post_checkout = function() vim.cmd('AvanteBuild') end }
+  hooks = { post_checkout = function() vim.cmd('AvanteBuild') end },
+  opts = {
+      mappings = {
+          --- @class AvanteConflictMappings
+          diff = {
+              ours = "co",
+              theirs = "ct",
+              all_theirs = "ca",
+              both = "cb",
+              cursor = "c<Enter>",
+              next = "]x",
+              prev = "[x",
+          },
+      }
+  }
 })
 
 require('avante_lib').load()
